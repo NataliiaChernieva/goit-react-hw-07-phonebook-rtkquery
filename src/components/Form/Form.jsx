@@ -1,18 +1,24 @@
 import React, { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
+import { toast } from 'react-hot-toast';
 import { CustomForm } from './Form.styled';
 import Button from '../Button/Button';
 import Input from '../Input/Input';
-import { useDispatch, useSelector } from 'react-redux';
+import { Spinner } from '../Spinner/Spinner';
+// import { useDispatch, useSelector } from 'react-redux';
 // import { addContact } from '../../redux/actions/items'; //без Toolkit i Slice
-import {addContact} from '../../redux/slices/itemsSlice';
+// import { addContact } from '../../redux/slices/itemsSlice';
+import {useFetchContactsQuery, usePostContactMutation } from '../../redux/operations'; //c RTKQuery
 
 export default function Form() {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
 
-  const dispatch = useDispatch();
-  const contacts = useSelector((state) => state.items);
+  const [addContact, {isLoading}] = usePostContactMutation();
+  const { data: contacts } = useFetchContactsQuery();
+
+  // const dispatch = useDispatch();
+  // const contacts = useSelector((state) => state.items);
   
   const handleSetInfo = e => {
     const { name, value } = e.target;
@@ -36,8 +42,10 @@ export default function Form() {
     
     contacts.find(savedContact => savedContact.name === name)
       ? alert(`${name} is already in contacts`)
-      : dispatch(addContact({ name, number, id }));
+      // : dispatch(addContact({ name, number, id }));
+      : addContact({ name, number, id });
     reset();
+    toast.success('Сontact is added to the phone book!');
   };
 
   const reset = () => {
@@ -65,7 +73,10 @@ export default function Form() {
         required
         onChange={handleSetInfo}
       />
-      <Button type="submit" text="Add contact" />
+      <Button type="submit" disabled={isLoading}>
+        {isLoading && <Spinner size={12} />}
+        Add contact
+      </Button>
     </CustomForm>
   );
 }

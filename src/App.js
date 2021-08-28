@@ -1,5 +1,6 @@
 // import { v4 as uuidv4 } from 'uuid';
-import { useSelector } from 'react-redux';
+//import { useSelector } from 'react-redux';
+import { Toaster } from 'react-hot-toast';
 import {
   Container,
   Title,
@@ -12,17 +13,17 @@ import { useFetchContactsQuery } from './redux/operations.js';
 
 
 export default function App() {
-  const contacts = useSelector((state) => state.items);
-  const { data, error, isLoading } = useFetchContactsQuery();//isFetching
-  console.log(`data`, data)
- 
+  // const contacts = useSelector((state) => state.items);
+  const { data: contacts, error, isFetching} = useFetchContactsQuery();
+   
     return (
     <Container>
       <Title>Phonebook</Title>
       <Form/>
       {contacts.length !== 0 && <SectionTitle>Contacts</SectionTitle>}
       {contacts.length !== 0 && <Filter/>}
-      <ContactList/>
+      <ContactList />
+      <Toaster position="top-right" />
     </Container>
   );
 }

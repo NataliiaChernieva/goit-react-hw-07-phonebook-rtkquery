@@ -1,13 +1,15 @@
-import { useSelector,  useDispatch } from 'react-redux';
+import { useSelector,  /*useDispatch*/ } from 'react-redux';
 import { useEffect } from 'react';
-import { deleteContact } from '../../redux/slices/itemsSlice'; //c Slice
+// import { deleteContact } from '../../redux/slices/itemsSlice'; //c Slice
 import ContactListItem from '../ContactListItem/ContactListItem';
+import { useFetchContactsQuery } from '../../redux/operations.js';
 
 export default function ContactList() {
-  const contacts = useSelector((state) => state.items);
+  // const contacts = useSelector((state) => state.items);
   const filterValue = useSelector((state) => state.filter);
-  // console.log(`filter`, filterValue)
-  const dispatch = useDispatch();
+  //const dispatch = useDispatch();
+   const { data: contacts } = useFetchContactsQuery();
+  
 
   useEffect(() => {
     localStorage.setItem('contactList', JSON.stringify(contacts));
@@ -25,7 +27,10 @@ export default function ContactList() {
           key={id}
           name={name}
           number={number}
-          onClick={()=>dispatch(deleteContact(id))}
+          id={id}
+          // onDelete={() => dispatch(deleteContact(id))}
+          // onDelete={() => deleteContact(id)}
+          // deleting={isDeliting}
         />
       ))}
     </ul>

@@ -7,6 +7,7 @@ export default function Filter() {
      
     const changeFilter = e => {
       dispatch(filter(e.target.value.toLowerCase()));
+      e.target.value.reset();
     };
   
      
